@@ -1,15 +1,15 @@
 # RAG Search Engine
 
-This repository implements a **Retrieval-Augmented Generation (RAG)** search engine step by step, following the progression of the Boot.dev “Learn Retrieval Augmented Generation” course.
+This repository implements a Retrieval-Augmented Generation (RAG) search engine step by step.
 
 ## Goal
 
 Build a complete, testable RAG pipeline:
 
-- **Retrieval**: fetch relevant context from a document corpus
-- **Ranking**: improve results from basic keyword matching to stronger scoring strategies
-- **Generation**: produce answers using retrieved context (instead of guessing from model memory)
-- **Iteration**: measure quality and improve the system over time
+- Retrieval: fetch relevant context from a document corpus
+- Ranking: improve results from basic keyword matching to stronger scoring strategies
+- Generation: produce answers using retrieved context (instead of guessing from model memory)
+- Iteration: measure quality and improve the system over time
 
 ## Why This Project Starts From Scratch
 
@@ -20,48 +20,68 @@ This repo intentionally builds the low-level pieces before using higher-level RA
 - build intuition for scoring and ranking before adding abstraction
 - avoid treating retrieval as a black box when quality drops in production
 
-## Course-Aligned Roadmap
+## Project Roadmap
 
-This repo is structured to mirror the course’s major topics (high level): :contentReference[oaicite:0]{index=0}
+This repo is structured in progressive stages:
 
-- [x] **Preprocessing** (normalize + clean text)
-- [x] **TF-IDF** (weighted retrieval over an inverted index)
-- [ ] **Keyword Search** (BM25 + metadata boosts)
-- [ ] **Semantic Search** (embeddings + vector similarity)
-- [ ] **Chunking** (retrieve the right snippets, not entire docs)
-- [ ] **Hybrid Search** (blend lexical + semantic signals)
-- [ ] **LLMs** (query expansion / intent correction / orchestration)
-- [ ] **Reranking** (re-score candidates to improve top results)
-- [ ] **Evaluation** (measure precision/recall/relevance)
-- [ ] **Augmented Generation** (grounded answers using retrieved context)
-- [ ] **Agentic Search**
-- [ ] **Multimodal Retrieval**
+- [x] Preprocessing (normalize + clean text)
+- [x] Inverted index + term frequencies
+- [ ] TF-IDF / BM25 ranking
+- [ ] Semantic search (embeddings + vector similarity)
+- [ ] Chunking
+- [ ] Hybrid search
+- [ ] Reranking
+- [ ] Evaluation
+- [ ] Augmented generation (grounded answers)
 
-The course ultimately builds toward a full RAG pipeline in Python, including an LLM step using the Gemini API. :contentReference[oaicite:1]{index=1}
+## Current Output
 
-## Current Output (What This Repo Produces Today)
-
-Right now, this project provides a working **local keyword-search baseline** over `data/movies.json`:
+Right now, this project provides a working local keyword-search baseline over `data/movies.json`:
 
 - text normalization + tokenization + stemming + stop-word filtering
 - inverted index creation and persistence
 - per-document term frequency tracking
 - CLI commands for indexing, searching, and TF inspection
 
-### Generated artifacts
+### Generated Artifacts
 
 - `cache/index.pkl`
 - `cache/docmap.pkl`
 - `cache/term_frequencies.pkl`
 
-> Cache files are stored locally and should be ignored by git.
-
 ## Requirements
 
-- Python 3.11+ (3.12+ recommended)
+- Python 3.14+
 - `uv` (recommended)
 
 ## Setup
 
 ```bash
 uv sync
+```
+
+## Commands (Current)
+
+Build the inverted index cache:
+
+```bash
+uv run python cli/keyword_search_cli.py build
+```
+
+Search by query:
+
+```bash
+uv run python cli/keyword_search_cli.py search "space adventure"
+```
+
+Get term frequency for a term in a document:
+
+```bash
+uv run python cli/keyword_search_cli.py tf 42 adventure
+```
+
+## Data and Cache
+
+- Input data: `data/movies.json`
+- Stop words: `data/stopwords.txt`
+- Cached files: `cache/index.pkl`, `cache/docmap.pkl`, `cache/term_frequencies.pkl`
