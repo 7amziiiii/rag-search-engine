@@ -17,10 +17,8 @@ def tokenize_text(text: str):
 def clean_tokens(tokens: list):
     stop_words = load_stop_words()
     stemmer = PorterStemmer()
-    stop_words = [stemmer.stem(token) for token in stop_words ]
-    tokens = [stemmer.stem(token) for token in tokens ]
     tokens = [token for token in tokens if token not in stop_words]
-
+    tokens = [stemmer.stem(token) for token in tokens ]
     return tokens
 
 
