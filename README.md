@@ -25,7 +25,7 @@ This repo intentionally builds the low-level pieces before using higher-level RA
 This repo is structured to mirror the course’s major topics (high level): :contentReference[oaicite:0]{index=0}
 
 - [x] **Preprocessing** (normalize + clean text)
-- [ ] **TF-IDF** (weighted retrieval over an inverted index)
+- [x] **TF-IDF** (weighted retrieval over an inverted index)
 - [ ] **Keyword Search** (BM25 + metadata boosts)
 - [ ] **Semantic Search** (embeddings + vector similarity)
 - [ ] **Chunking** (retrieve the right snippets, not entire docs)
