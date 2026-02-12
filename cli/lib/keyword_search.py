@@ -4,7 +4,7 @@ def search_command(query,n_results):
     movies = load_movies()
     results = []
     for movie in movies:
-        if query in movie['title']:
+        if query.lower() in movie['title'].lower():
             results.append(movie)
         if len(results) == n_results:
             break
