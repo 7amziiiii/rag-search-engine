@@ -4,12 +4,13 @@ from nltk.stem import PorterStemmer
 from collections import Counter, defaultdict
 import os
 import pickle
+import math
 
 class InvertedIndex:
     def __init__(self):
-        self.index = defaultdict(set)
-        self.docmap = {}
-        self.term_frequencies = defaultdict(Counter)
+        self.index = defaultdict(set) # token -> set of doc_ids
+        self.docmap = {} # doc_id -> movie dict
+        self.term_frequencies = defaultdict(Counter) # doc_id -> Counter of token frequencies
         self.index_path = CACHE_PATH / 'index.pkl'
         self.docmap_path = CACHE_PATH / 'docmap.pkl'
         self.term_frequencies_path = CACHE_PATH / 'term_frequencies.pkl'
@@ -56,6 +57,35 @@ class InvertedIndex:
         token = tokens[0]
         return self.term_frequencies[doc_id][token]
 
+    def get_idf(self, term):
+        tokens  =  tokenize_text(term)
+        if len(tokens) != 1:
+            raise ValueError("Term must be a single token")
+        token = tokens[0]
+        total_docs_count = len(self.docmap)
+        term_match_doc_count = len(self.index[token])
+        return math.log((total_docs_count + 1) / (term_match_doc_count + 1))
+
+    def get_tf_idf(self, doc_id, term):
+        tf = self.get_tf(doc_id, term)
+        idf = self.get_idf(term)
+        return tf * idf
+
+
+def tfidf_command(doc_id, term):
+    idx = InvertedIndex()
+    idx.load()
+    tfidf = idx.get_tf_idf(doc_id, term)
+    print(f"TF-IDF score of '{term}' in document '{doc_id}': {tfidf:.2f}")
+    
+def idf_command(term):
+    idx = InvertedIndex()
+    idx.load()
+    idf = idx.get_idf(term)
+    print(f"Inverse document frequency of '{term}': {idf:.2f}")
+    
+
+
 def get_tf_command(doc_id, term):
     idx = InvertedIndex()
     idx.load()
@@ -65,38 +95,6 @@ def build_command():
     index = InvertedIndex()
     index.build()
     index.save()
-    # docs = index.get_documents('merida')
-    # print(f"First document for token 'merida' = {docs[0]}")
-
-def clean_text(text: str):
-    text = text.lower()
-    text  = text.translate(str.maketrans("","", string.punctuation))
-    return text
-
-
-def tokenize_text(text: str):
-    text = clean_text(text)
-    tokens = [tok for tok in text.split() if tok]
-    stop_words = load_stop_words()
-    stemmer = PorterStemmer()
-    tokens = [token for token in tokens if token not in stop_words]
-    tokens = [stemmer.stem(token) for token in tokens ]
-    return tokens
-
-
-
-# def clean_tokens(tokens: list):
-    
-
-def has_matching_token(query_tokens:list[str], movie_tokens:list[str]):
-    
-    for query_tok in query_tokens:
-        for movie_tok in movie_tokens:
-            if query_tok in movie_tok:
-                return True
-    return False
-
-
 
 def search_command(query: str,n_results: int = 5):
     movies = load_movies()
@@ -115,11 +113,26 @@ def search_command(query: str,n_results: int = 5):
             if len(results) == n_results:
                 break
     return results
-        
-    # for movie in movies:
-    #     movie_tokens = tokenize_text(movie['title'])
-    #     if has_matching_token(query_tokens,movie_tokens):
-    #         results.append(movie)
-    #     if len(results) == n_results:
-    #         break
-    # return results
+
+def clean_text(text: str):
+    text = text.lower()
+    text  = text.translate(str.maketrans("","", string.punctuation))
+    return text
+
+def tokenize_text(text: str):
+    text = clean_text(text)
+    tokens = [tok for tok in text.split() if tok]
+    stop_words = load_stop_words()
+    stemmer = PorterStemmer()
+    tokens = [token for token in tokens if token not in stop_words]
+    tokens = [stemmer.stem(token) for token in tokens ]
+    return tokens
+
+def has_matching_token(query_tokens:list[str], movie_tokens:list[str]):
+    
+    for query_tok in query_tokens:
+        for movie_tok in movie_tokens:
+            if query_tok in movie_tok:
+                return True
+    return False
+
