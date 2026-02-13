@@ -1,6 +1,10 @@
 # RAG Search Engine
 
+<<<<<<< HEAD
 This repository implements a Retrieval-Augmented Generation (RAG) search engine step by step.
+=======
+This repository implements a Retrieval-Augmented Generation (RAG) search engine step by step, following the progression of the Boot.dev Learn Retrieval Augmented Generation course.
+>>>>>>> TF-IDF
 
 ## Goal
 
@@ -22,6 +26,7 @@ This repo intentionally builds the low-level pieces before using higher-level RA
 
 ## Project Roadmap
 
+<<<<<<< HEAD
 This repo is structured in progressive stages:
 
 - [x] Preprocessing (normalize + clean text)
@@ -36,12 +41,69 @@ This repo is structured in progressive stages:
 
 ## Current Output
 
+=======
+1. Preprocessing
+Normalize and clean raw corpora so they are ready for indexing and downstream retrieval tasks.
+
+2. TF-IDF
+Construct inverted indexes and weighting schemes so keyword search can rank documents effectively.
+
+3. Keyword Search
+Tune keyword retrieval with BM25 refinements and metadata boosts to improve lexical relevance.
+
+4. Semantic Search
+Apply embeddings, similarity metrics, and vector databases to deliver semantic retrieval and RAG responses.
+
+5. Chunking
+Partition documents into context-preserving segments so RAG pipelines can retrieve the right snippets efficiently.
+
+6. Hybrid Search
+Blend lexical and semantic scores into unified retrieval pipelines that boost ranking quality.
+
+7. LLMs
+Leverage large language models to expand queries, correct intent, and orchestrate retrieval workflows.
+
+8. Reranking
+Re-score retrieved candidates with rerankers to surface the most relevant answers.
+
+9. Evaluation
+Measure retrieval precision, recall, and relevance so you can systematically improve RAG performance.
+
+10. Augmented Generation
+Combine retrieved context with LLMs to synthesize coherent, grounded answers for end users.
+
+11. Agentic
+Deploy autonomous agents that iteratively refine queries and navigate complex retrieval workflows.
+
+12. Multimodal
+Extend RAG to images and other modalities with multimodal embeddings and cross-modal retrieval.
+
+## Current Status
+
+- [x] Preprocessing
+- [x] TF-IDF (term-frequency, IDF, and TF-IDF inspection commands)
+- [ ] Keyword Search (BM25 + metadata boosts)
+- [ ] Semantic Search
+- [ ] Chunking
+- [ ] Hybrid Search
+- [ ] LLMs
+- [ ] Reranking
+- [ ] Evaluation
+- [ ] Augmented Generation
+- [ ] Agentic
+- [ ] Multimodal
+
+## Current Output
+
+>>>>>>> TF-IDF
 Right now, this project provides a working local keyword-search baseline over `data/movies.json`:
 
 - text normalization + tokenization + stemming + stop-word filtering
 - inverted index creation and persistence
 - per-document term frequency tracking
-- CLI commands for indexing, searching, and TF inspection
+- inverse document frequency (IDF) calculation
+- TF-IDF score calculation (`tf * idf`) for a term in a document
+- CLI commands for indexing, searching, and TF/IDF/TF-IDF inspection
 
 ### Generated Artifacts
 
@@ -51,7 +113,11 @@ Right now, this project provides a working local keyword-search baseline over `d
 
 ## Requirements
 
+<<<<<<< HEAD
 - Python 3.14+
+=======
+- Python 3.11+
+>>>>>>> TF-IDF
 - `uv` (recommended)
 
 ## Setup
@@ -80,6 +146,21 @@ Get term frequency for a term in a document:
 uv run python cli/keyword_search_cli.py tf 42 adventure
 ```
 
+<<<<<<< HEAD
+=======
+Get inverse document frequency (IDF) for a term:
+
+```bash
+uv run python cli/keyword_search_cli.py idf adventure
+```
+
+Get TF-IDF for a term in a document:
+
+```bash
+uv run python cli/keyword_search_cli.py tfidf 42 adventure
+```
+
+>>>>>>> TF-IDF
 ## Data and Cache
 
 - Input data: `data/movies.json`
