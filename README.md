@@ -63,8 +63,8 @@ Extend RAG to images and other modalities with multimodal embeddings and cross-m
 - [x] Preprocessing
 - [x] TF-IDF (TF, IDF, and TF-IDF inspection commands)
 - [x] Keyword Search (baseline lookup + BM25 scoring/search commands)
-- [ ] Semantic Search
-- [ ] Chunking
+- [x] Semantic Search (embeddings + cosine-similarity retrieval over movies)
+- [ ] Chunking (chapter started: fixed-size chunking utility added)
 - [ ] Hybrid Search
 - [ ] LLMs
 - [ ] Reranking
@@ -80,6 +80,9 @@ Extend RAG to images and other modalities with multimodal embeddings and cross-m
 - Added BM25 components (BM25 IDF, BM25 TF with tunable `k1`/`b`, and ranked BM25 query search).
 - Persisted document lengths for BM25 length normalization.
 - Kept a simple baseline keyword search flow for comparison against BM25 ranking.
+- Added semantic embeddings using `sentence-transformers` (`all-MiniLM-L6-v2`).
+- Added embedding cache loading/generation and semantic similarity search commands.
+- Started chunking with a fixed-size chunking helper and CLI command.
 
 ## Current Output
 
@@ -92,6 +95,9 @@ Right now, this project provides a working local keyword-search baseline over `d
 - inverse document frequency (IDF) calculation
 - TF-IDF score calculation (`tf * idf`) for a term in a document
 - BM25 term score and BM25-ranked query search commands
+- semantic embedding generation and caching
+- cosine-similarity semantic retrieval
+- initial fixed-size chunking workflow
 
 ### Generated Artifacts
 
@@ -99,6 +105,7 @@ Right now, this project provides a working local keyword-search baseline over `d
 - `cache/docmap.pkl`
 - `cache/term_frequencies.pkl`
 - `cache/doc_lengths.pkl`
+- `cache/movie_embeddings.npy`
 
 ## Requirements
 
@@ -162,8 +169,44 @@ Search by query using BM25 ranking:
 uv run python cli/keyword_search_cli.py bm25search "space adventure"
 ```
 
+Verify semantic model loading:
+
+```bash
+uv run python cli/semantic_search_cli.py verify
+```
+
+Generate embedding for arbitrary text:
+
+```bash
+uv run python cli/semantic_search_cli.py embed_text "A story about deep space survival"
+```
+
+Generate/check cached movie embeddings:
+
+```bash
+uv run python cli/semantic_search_cli.py verify_embeddings
+```
+
+Generate embedding for a query:
+
+```bash
+uv run python cli/semantic_search_cli.py embedquery "space adventure mission"
+```
+
+Run semantic search:
+
+```bash
+uv run python cli/semantic_search_cli.py search "space adventure mission" --limit 5
+```
+
+Chunk input text (fixed-size chunks):
+
+```bash
+uv run python cli/semantic_search_cli.py chunk "Your long text goes here" --chunk-size 200
+```
+
 ## Data and Cache
 
 - Input data: `data/movies.json`
 - Stop words: `data/stopwords.txt`
-- Cached files: `cache/index.pkl`, `cache/docmap.pkl`, `cache/term_frequencies.pkl`, `cache/doc_lengths.pkl`
+- Cached files: `cache/index.pkl`, `cache/docmap.pkl`, `cache/term_frequencies.pkl`, `cache/doc_lengths.pkl`, `cache/movie_embeddings.npy`
